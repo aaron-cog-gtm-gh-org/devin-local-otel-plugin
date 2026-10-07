@@ -10,6 +10,16 @@
           "timeout": 10
         }
       ]
+    },
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash -c 'echo \"[$(date -u +%FT%TZ)] env_PLUGIN_ROOT=${PLUGIN_ROOT:-unset} literal=${PLUGIN_ROOT} PWD=$PWD\" >> /tmp/skill-hook-debug.log; cat >> /tmp/skill-hook-debug.log; echo >> /tmp/skill-hook-debug.log'",
+          "timeout": 10
+        }
+      ]
     }
   ],
   "UserPromptSubmit": [
@@ -19,6 +29,11 @@
           "type": "command",
           "command": "bash \"${PLUGIN_ROOT}/scripts/log-skill.sh\"",
           "powershell": "powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"$env:PLUGIN_ROOT/scripts/log-skill.ps1\"",
+          "timeout": 10
+        },
+        {
+          "type": "command",
+          "command": "bash -c 'echo \"[$(date -u +%FT%TZ)] env_PLUGIN_ROOT=${PLUGIN_ROOT:-unset} literal=${PLUGIN_ROOT} PWD=$PWD\" >> /tmp/skill-hook-debug.log; cat >> /tmp/skill-hook-debug.log; echo >> /tmp/skill-hook-debug.log'",
           "timeout": 10
         }
       ]
