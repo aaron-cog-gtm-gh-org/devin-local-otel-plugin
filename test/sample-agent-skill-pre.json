@@ -1,0 +1,1 @@
+{"hook_event_name":"PreToolUse","tool_name":"skill_invoke","tool_input":{"skill":"rbc-plugin:deploy"},"tool_use_id":"tu_pre","tool_provenance":{"type":"skill","name":"rbc-plugin:deploy","path":"/x/rbc-plugin/skills/deploy/SKILL.md","plugin":"rbc-plugin"},"session_id":"sess-123","prompt_id":"p_pre"}

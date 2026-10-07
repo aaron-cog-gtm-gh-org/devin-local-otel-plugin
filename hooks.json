@@ -1,12 +1,12 @@
 {
-  "PreToolUse": [
+  "PostToolUse": [
     {
       "matcher": "^(skill_invoke|skill)$",
       "hooks": [
         {
           "type": "command",
-          "command": "bash \"${PLUGIN_ROOT}/scripts/log-skill.sh\"",
-          "powershell": "powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"$env:PLUGIN_ROOT/scripts/log-skill.ps1\"",
+          "command": "bash \"${DEVIN_PLUGIN_ROOT:-${CLAUDE_PLUGIN_ROOT:-$PLUGIN_ROOT}}/scripts/log-skill.sh\"",
+          "powershell": "powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"$(if ($env:DEVIN_PLUGIN_ROOT) { $env:DEVIN_PLUGIN_ROOT } elseif ($env:CLAUDE_PLUGIN_ROOT) { $env:CLAUDE_PLUGIN_ROOT } else { $env:PLUGIN_ROOT })/scripts/log-skill.ps1\"",
           "timeout": 10
         }
       ]
@@ -17,8 +17,8 @@
       "hooks": [
         {
           "type": "command",
-          "command": "bash \"${PLUGIN_ROOT}/scripts/log-skill.sh\"",
-          "powershell": "powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"$env:PLUGIN_ROOT/scripts/log-skill.ps1\"",
+          "command": "bash \"${DEVIN_PLUGIN_ROOT:-${CLAUDE_PLUGIN_ROOT:-$PLUGIN_ROOT}}/scripts/log-skill.sh\"",
+          "powershell": "powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"$(if ($env:DEVIN_PLUGIN_ROOT) { $env:DEVIN_PLUGIN_ROOT } elseif ($env:CLAUDE_PLUGIN_ROOT) { $env:CLAUDE_PLUGIN_ROOT } else { $env:PLUGIN_ROOT })/scripts/log-skill.ps1\"",
           "timeout": 10
         }
       ]

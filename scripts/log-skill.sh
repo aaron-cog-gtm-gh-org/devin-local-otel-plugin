@@ -9,19 +9,27 @@ BS="$(printf '\134')"
 
 input="$(cat)"
 # Value of the first "key":"value" pair in the hook JSON (kept JSON-escaped).
-jstr() { printf '%s' "$input" | sed -nE "s/.*\"$1\"[[:space:]]*:[[:space:]]*\"([^\"]*)\".*/\1/p" | head -n1; }
+jstr() { printf '%s' "$input" | sed -nE "s/.*[^\\\\]\"$1\"[[:space:]]*:[[:space:]]*\"([^\"]*)\".*/\1/p" | head -n1; }
 # JSON-escape a raw string.
 esc() { local v="$1"; v="${v//"$BS"/"$BS$BS"}"; v="${v//\"/"$BS"\"}"; printf '%s' "$v"; }
 
 event="$(jstr hook_event_name)"
-skill="" trigger="" plugin="" skill_path=""
-if [ "$event" = "PreToolUse" ]; then
+skill="" event_kind="" plugin="" skill_path=""
+if [ "$event" = "PostToolUse" ]; then
   case "$(jstr tool_name)" in skill_invoke|skill) ;; *) exit 0 ;; esac
-  skill="$(jstr skill)"; trigger="agent"
-  plugin="$(jstr plugin)"; skill_path="$(jstr path)"
+  success="$(printf '%s' "$input" | sed -nE 's/.*[^\\]"success"[[:space:]]*:[[:space:]]*true.*/success/p' | sed -n '1p')"
+  [ "$success" = "success" ] || exit 0
+  skill="$(jstr skill)"; event_kind="activated"
+  skill_path="$(printf '%s' "$input" | sed -nE 's/.*Source:[[:space:]]*([^\\]*)\\n.*/\1/p' | head -n1)"
+  [ -n "$skill_path" ] || skill_path="$(jstr path)"
+  if [ "${skill#*:}" != "$skill" ]; then
+    plugin="${skill%%:*}"
+  else
+    plugin="$(jstr plugin)"
+  fi
 elif [ "$event" = "UserPromptSubmit" ]; then
   skill="$(printf '%s' "$input" | sed -nE 's/.*"prompt"[[:space:]]*:[[:space:]]*"[[:space:]]*\/([A-Za-z0-9][A-Za-z0-9_:.-]*).*/\1/p' | head -n1)"
-  trigger="user"
+  event_kind="user_invoked"
 fi
 [ -n "$skill" ] || exit 0
 if [ -z "$plugin" ] && [ "${skill#*:}" != "$skill" ]; then plugin="${skill%%:*}"; fi
@@ -46,7 +54,7 @@ if [ -z "$user" ]; then user="$os_user"; source="os_user"; fi
 
 ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 host="$(hostname 2>/dev/null)"
-line="{\"timestamp\":\"$ts\",\"event\":\"skill_used\",\"skill\":\"$skill\",\"trigger\":\"$trigger\",\"plugin\":\"$plugin\",\"user\":\"$(esc "$user")\",\"user_source\":\"$source\",\"os_user\":\"$(esc "$os_user")\",\"host\":\"$(esc "$host")\",\"session_id\":\"$(jstr session_id)\",\"hook_event\":\"$event\",\"tool_use_id\":\"$(jstr tool_use_id)\",\"skill_path\":\"$skill_path\",\"cwd\":\"$(esc "${DEVIN_PROJECT_DIR:-}")\"}"
+line="{\"timestamp\":\"$ts\",\"event\":\"skill_used\",\"skill\":\"$skill\",\"event_kind\":\"$event_kind\",\"plugin\":\"$plugin\",\"user\":\"$(esc "$user")\",\"user_source\":\"$source\",\"os_user\":\"$(esc "$os_user")\",\"host\":\"$(esc "$host")\",\"session_id\":\"$(jstr session_id)\",\"prompt_id\":\"$(jstr prompt_id)\",\"hook_event\":\"$event\",\"tool_use_id\":\"$(jstr tool_use_id)\",\"skill_path\":\"$skill_path\",\"cwd\":\"$(esc "${DEVIN_PROJECT_DIR:-}")\"}"
 
 if mkdir -p "$log_dir" 2>/dev/null && printf '%s\n' "$line" >>"$log_file" 2>/dev/null; then :; else
   printf '%s could not write %s\n' "$ts" "$log_file" >>"${TMPDIR:-/tmp}/devin-skill-telemetry-errors.log" 2>/dev/null

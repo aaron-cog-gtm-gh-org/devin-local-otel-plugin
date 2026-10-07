@@ -10,14 +10,17 @@ try {
     if (-not $raw) { exit 0 }
     $evt = $raw | ConvertFrom-Json
 
-    $skill = $null; $trigger = $null; $plugin = $null; $skillPath = $null
-    if ($evt.hook_event_name -eq 'PreToolUse' -and $evt.tool_name -match '^(skill_invoke|skill)$') {
+    $skill = $null; $eventKind = $null; $plugin = $null; $skillPath = $null
+    if ($evt.hook_event_name -eq 'PostToolUse' -and $evt.tool_name -match '^(skill_invoke|skill)$' -and $evt.tool_response.success -eq $true) {
         $skill = [string]$evt.tool_input.skill
-        $trigger = 'agent'
-        if ($evt.tool_provenance) { $plugin = $evt.tool_provenance.plugin; $skillPath = $evt.tool_provenance.path }
+        $eventKind = 'activated'
+        if ($evt.tool_response.output -match '(?m)^Source:\s*(.+)$') { $skillPath = $Matches[1].Trim() }
+        if (-not $skillPath -and $evt.tool_provenance) { $skillPath = $evt.tool_provenance.path }
+        if ($skill -match '^([^:]+):(.+)$') { $plugin = $Matches[1] }
+        elseif ($evt.tool_provenance) { $plugin = $evt.tool_provenance.plugin }
     } elseif ($evt.hook_event_name -eq 'UserPromptSubmit' -and $evt.prompt -match '^\s*/([A-Za-z0-9][A-Za-z0-9_:.\-]*)') {
         $skill = $Matches[1]
-        $trigger = 'user'
+        $eventKind = 'user_invoked'
     }
     if (-not $skill) { exit 0 }
     if (-not $plugin -and $skill -match '^([^:]+):(.+)$') { $plugin = $Matches[1] }
@@ -44,13 +47,14 @@ try {
         timestamp   = [DateTimeOffset]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
         event       = 'skill_used'
         skill       = $skill
-        trigger     = $trigger
+        event_kind  = $eventKind
         plugin      = [string]$plugin
         user        = $user
         user_source = $source
         os_user     = $osUser
         host        = $env:COMPUTERNAME
         session_id  = [string]$evt.session_id
+        prompt_id   = [string]$evt.prompt_id
         hook_event  = [string]$evt.hook_event_name
         tool_use_id = [string]$evt.tool_use_id
         skill_path  = [string]$skillPath

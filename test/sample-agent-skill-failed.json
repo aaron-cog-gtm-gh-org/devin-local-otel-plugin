@@ -1,0 +1,1 @@
+{"hook_event_name":"PostToolUse","tool_name":"skill_invoke","tool_input":{"skill":"rbc-plugin:deploy"},"tool_use_id":"tu_failed","tool_response":{"success":false,"output":"The docs contain the escaped text: \"success\": true","error":"skill invocation failed"},"session_id":"sess-123","prompt_id":"p_failed"}
