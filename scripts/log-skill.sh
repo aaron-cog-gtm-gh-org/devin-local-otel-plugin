@@ -20,7 +20,7 @@ if [ "$event" = "PostToolUse" ]; then
   success="$(printf '%s' "$input" | sed -nE 's/.*[^\\]"success"[[:space:]]*:[[:space:]]*true.*/success/p' | sed -n '1p')"
   [ "$success" = "success" ] || exit 0
   skill="$(jstr skill)"; event_kind="activated"
-  skill_path="$(printf '%s' "$input" | sed -nE 's/.*Source:[[:space:]]*([^\\]*)\\n.*/\1/p' | head -n1)"
+  skill_path="$(printf '%s' "$input" | grep -oE 'Source:[[:space:]]*[^\\]*\\n' | head -n1 | sed -E 's/^Source:[[:space:]]*//; s/\\n$//')"
   [ -n "$skill_path" ] || skill_path="$(jstr path)"
   if [ "${skill#*:}" != "$skill" ]; then
     plugin="${skill%%:*}"

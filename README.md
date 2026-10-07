@@ -2,14 +2,14 @@
 
 Devin plugin that logs every **skill use** (**which skill, which user, when**) to a local file,
 one JSON object per line. It also records the session, event kind, plugin and host for
-correlation. Works in Devin CLI and Devin Local in Desktop. Fails open: the hook
+correlation. Verified in Devin Local in Desktop; Devin CLI uses the same hooks; Devin Cloud is untested. Fails open: the hook
 always exits 0 and prints nothing, so it never blocks or changes the agent.
 
 ## What fires
 
 | Hook | Catches | `event_kind` |
 |---|---|---|
-| `PostToolUse` matcher `^(skill_invoke\|skill)$` | a successfully activated skill (`skill_invoke` tool) | `activated` |
+| `PostToolUse` matcher `^(skill_invoke\|skill)$` | a successfully activated skill (`skill` tool; `skill_invoke` in Cloud) | `activated` |
 | `UserPromptSubmit` (prompt starts with `/name`) | a user typing `/skill-name ...` | `user_invoked` |
 
 Windows runs `scripts/log-skill.ps1` (Windows PowerShell 5.1+ or pwsh, no extra installs).
