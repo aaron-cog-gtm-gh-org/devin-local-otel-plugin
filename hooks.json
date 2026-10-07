@@ -16,7 +16,7 @@
       "hooks": [
         {
           "type": "command",
-          "command": "bash -c 'echo \"[$(date -u +%FT%TZ)] env_PLUGIN_ROOT=${PLUGIN_ROOT:-unset} literal=${PLUGIN_ROOT} PWD=$PWD\" >> /tmp/skill-hook-debug.log; cat >> /tmp/skill-hook-debug.log; echo >> /tmp/skill-hook-debug.log'",
+          "command": "bash -c '{ echo \"[$(date -u +%FT%TZ)] PWD=$PWD\"; echo \"env_names: $(env | cut -d= -f1 | sort | tr \"\\n\" \" \")\"; env | grep -E \"^[A-Z0-9_]*(PLUGIN|_ROOT|_DIR)[A-Z0-9_]*=\" | grep -viE \"KEY|TOKEN|SECRET|PASS\"; cat; echo; } >> /tmp/skill-hook-debug.log'",
           "timeout": 10
         }
       ]
@@ -33,7 +33,19 @@
         },
         {
           "type": "command",
-          "command": "bash -c 'echo \"[$(date -u +%FT%TZ)] env_PLUGIN_ROOT=${PLUGIN_ROOT:-unset} literal=${PLUGIN_ROOT} PWD=$PWD\" >> /tmp/skill-hook-debug.log; cat >> /tmp/skill-hook-debug.log; echo >> /tmp/skill-hook-debug.log'",
+          "command": "bash -c '{ echo \"[$(date -u +%FT%TZ)] PWD=$PWD\"; echo \"env_names: $(env | cut -d= -f1 | sort | tr \"\\n\" \" \")\"; env | grep -E \"^[A-Z0-9_]*(PLUGIN|_ROOT|_DIR)[A-Z0-9_]*=\" | grep -viE \"KEY|TOKEN|SECRET|PASS\"; cat; echo; } >> /tmp/skill-hook-debug.log'",
+          "timeout": 10
+        }
+      ]
+    }
+  ],
+  "PostToolUse": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash -c '{ echo \"[$(date -u +%FT%TZ)] PWD=$PWD\"; echo \"env_names: $(env | cut -d= -f1 | sort | tr \"\\n\" \" \")\"; env | grep -E \"^[A-Z0-9_]*(PLUGIN|_ROOT|_DIR)[A-Z0-9_]*=\" | grep -viE \"KEY|TOKEN|SECRET|PASS\"; cat; echo; } >> /tmp/skill-hook-debug.log'",
           "timeout": 10
         }
       ]
