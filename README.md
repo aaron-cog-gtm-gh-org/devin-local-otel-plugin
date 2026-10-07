@@ -60,15 +60,3 @@ bash and PowerShell versions.
 
 1. Push this folder to an internal git repo and tag it.
 2. Enterprise/Org settings → Plugins → add it under **required plugins**, pinned to the tag or sha.
-
-## Known limitations
-- A `/skill` prompt writes two rows (`user_invoked` then `activated`) sharing a `prompt_id`.
-- Skills auto-loaded into context ("eager" skills) aren't seen by any hook, so they aren't logged.
-- Migrated playbooks are cloud-only and aren't logged.
-- Subagent skill calls are unverified.
-- Slash names aren't checked against installed skills.
-- Only Devin Local / CLI run plugin hooks (not Cascade).
-- The user is self-reported by the endpoint (git email or OS user), not the Devin account ID.
-  Set `SKILL_TELEMETRY_USER` if you need a corporate ID.
-- Sending to Datadog (or any central sink) was removed for now. To add it back, ship this file
-  with the Datadog Agent's file tailing, or restore the HTTP intake post.
