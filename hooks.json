@@ -1,0 +1,27 @@
+{
+  "PreToolUse": [
+    {
+      "matcher": "^(skill_invoke|skill)$",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash \"${PLUGIN_ROOT}/scripts/log-skill.sh\"",
+          "powershell": "powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"$env:PLUGIN_ROOT/scripts/log-skill.ps1\"",
+          "timeout": 10
+        }
+      ]
+    }
+  ],
+  "UserPromptSubmit": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash \"${PLUGIN_ROOT}/scripts/log-skill.sh\"",
+          "powershell": "powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"$env:PLUGIN_ROOT/scripts/log-skill.ps1\"",
+          "timeout": 10
+        }
+      ]
+    }
+  ]
+}

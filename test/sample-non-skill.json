@@ -1,0 +1,1 @@
+{"hook_event_name":"PreToolUse","tool_name":"exec","tool_input":{"command":"ls"},"tool_use_id":"tu_9","session_id":"sess-123"}

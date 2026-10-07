@@ -1,0 +1,6 @@
+{
+  "name": "devin-skill-telemetry",
+  "version": "0.2.0",
+  "description": "Logs every Devin skill use (skill, user, time, session) to a local JSONL file via hooks. Fails open: never blocks the agent.",
+  "author": { "name": "Cognition" }
+}
