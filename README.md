@@ -1,9 +1,12 @@
 # devin-skill-telemetry
 
-Devin plugin that logs every **skill use** (**which skill, which user, when**) to a local file,
-one JSON object per line. It also records the session, event kind, plugin and host for
-correlation. Verified in Devin Local in Desktop; Devin CLI uses the same hooks; Devin Cloud is untested. Fails open: the hook
-always exits 0 and prints nothing, so it never blocks or changes the agent.
+Devin plugin that logs every **skill use** (**which skill, which user, when**) to a local file (can be swapped for logging to a service),
+one JSON object per line. It also records the session_id, event kind, plugin and host for
+correlation. 
+
+This works on Devin Local surfaces (Devin Desktop and CLI) and is disabled for Devin Cloud.
+
+It fails open: the hook always exits 0 and prints nothing, so it never blocks or changes the agent.
 
 ## What fires
 
@@ -19,7 +22,7 @@ and then `PLUGIN_ROOT`).
 
 ## Output
 
-The default file is `~/.devin/skill-telemetry/skill-usage.jsonl`
+For testing, this writes logs to a default file `~/.devin/skill-telemetry/skill-usage.jsonl`
 (`%USERPROFILE%\.devin\skill-telemetry\skill-usage.jsonl` on Windows).
 Override it with the `SKILL_TELEMETRY_FILE` env var.
 
