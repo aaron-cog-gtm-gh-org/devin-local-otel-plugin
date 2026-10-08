@@ -23,8 +23,7 @@ and then `PLUGIN_ROOT`).
 ## Output
 
 For testing, this writes logs to a default file `~/.devin/skill-telemetry/skill-usage.jsonl`
-(`%USERPROFILE%\.devin\skill-telemetry\skill-usage.jsonl` on Windows).
-Override it with the `SKILL_TELEMETRY_FILE` env var.
+(`%USERPROFILE%\.devin\skill-telemetry\skill-usage.jsonl` on Windows). You can, of course, update this plugin so that instead of writing to a local file, it logs the skill usage data!
 
 ```json
 {"timestamp":"2026-10-07T20:22:19.265Z","event":"skill_used","skill":"rbc-tools:code-review","event_kind":"activated","plugin":"rbc-tools","user":"jane.doe@rbc.com","user_source":"git_config","os_user":"RBC\jdoe","host":"RBC-LAPTOP-123","session_id":"...","prompt_id":"...","hook_event":"PostToolUse","tool_use_id":"...","skill_path":"...SKILL.md","cwd":"..."}
@@ -52,7 +51,7 @@ the file, it records why in `errors.log` next to the file (on Windows) or in
    - macOS/Linux: `tail -f ~/.devin/skill-telemetry/skill-usage.jsonl`
    - Windows: `Get-Content -Wait $HOME\.devin\skill-telemetry\skill-usage.jsonl`
 
-   You should see one line with `"event_kind":"user_invoked"` and one with `"event_kind":"activated"`.
+   You should see a log line with `"event_kind":"user_invoked"` and one with `"event_kind":"activated"`.
 
 Offline script test: `bash test/run-tests.sh` feeds sample hook payloads (successful/failed skill,
 pre-tool skill, user `/skill`, non-skill tool, and garbage input) through the script(s) and checks
@@ -62,4 +61,4 @@ bash and PowerShell versions.
 ## Rolling it out as an enterprise-managed plugin
 
 1. Push this folder to an internal git repo and tag it.
-2. Enterprise/Org settings → Plugins → add it under **required plugins**, pinned to the tag or sha.
+2. Enterprise/Org settings → Plugins → add it under **required plugins**, pinned to the tag.
