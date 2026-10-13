@@ -1,1 +1,0 @@
-{"hook_event_name":"PostToolUse","tool_name":"skill_invoke","tool_input":{"skill":"rbc-plugin:deploy"},"tool_use_id":"tu_1","tool_response":{"success":true,"output":"Instructions for the \"rbc-plugin:deploy\" skill.\nSource: /x/rbc-plugin/skills/deploy/SKILL.md\nBody line with escaped key: \"skill\": \"decoy\"\n","error":null},"session_id":"sess-123","prompt_id":"p1"}
